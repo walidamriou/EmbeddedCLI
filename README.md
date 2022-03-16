@@ -1,6 +1,8 @@
 # Embedded CLI
 # Embedded Command Line Interface  
-Open and Lightweight Command Line Interface for Embedded Systems 
+
+### About 
+Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems 
 
 ```
  _________________                                  _________________________________________
@@ -10,6 +12,13 @@ Open and Lightweight Command Line Interface for Embedded Systems
 
 ```
 
+### Library Features 
+- Know information about firmware 
+- Control of the system components 
+- Know the system components status 
+- Test the system components for debugging purposes
+- Reset/reboot the system
+  
 ### Copyright CC 2022 Walid Amriou
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
