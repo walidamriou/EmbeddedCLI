@@ -14,9 +14,85 @@
  */
 #include "embeddedcli.h"
 
-bool EmbeddedCLI_Error_Flag=false;
 char line[EMBEDDEDCLI_IN_BUF_SIZE];
 char args[EMBEDDEDCLI_MAX_ARGS][EMBEDDEDCLI_ARG_BUF_SIZE];
+
+/*************************************************************************************/
+/*************************************************************************************/
+/*****                            Config Embedded CLI                            *****/
+/*************************************************************************************/
+/*************************************************************************************/
+
+// List of functions pointers corresponding to each command
+int (*Commands_Functions_List[])(){
+    &cmd1,
+    &cmd2,
+    &cmd3
+};
+ 
+// List of command names 
+const char *Commands_Names_List[] = {
+    "cmd1",
+    "cmd2",
+    "cmd3"
+};
+
+// List of sub command of cmd 3 
+const char *Commands_Names_List_cmd3[] = {
+    "cmd31",
+    "cmd32",
+    "cmd33"
+};
+
+// Functions commands 
+
+// Command 1 example
+int cmd1(){
+  Serial.println("cmd 1");
+  return 0;
+};
+
+// Command 2 example
+int cmd2(){
+  Serial.println("cmd 2");
+  return 0;
+};
+
+// Command 3 example
+int cmd3(){
+  Serial.println("cmd 3");
+  Serial.println(args[1]);
+  if(strcmp(args[1], " ") == 0){
+    return 0;
+  }
+  if(strcmp(args[1], Commands_Names_List_cmd3[0]) == 0){
+    Serial.println("sub cmd 1 of cmd 3");
+    return 0;
+  }
+  else if(strcmp(args[1], Commands_Names_List_cmd3[1]) == 0){
+    Serial.println("sub cmd 2 of cmd 3");
+    return 0;
+  }
+  else if(strcmp(args[1], Commands_Names_List_cmd3[2]) == 0){
+    Serial.println("sub cmd 3 of cmd 3");
+    return 0;
+  }
+  else{
+    Serial.println("Invalid command. Type \"help\" for more.");
+    return 0;
+  }
+  return 0;
+}
+
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+
+
+
+bool EmbeddedCLI_Error_Flag=false;
 
 // init elci system
 void EmbeddedCLI_Init(){
@@ -41,46 +117,35 @@ int EmbeddedCLI_Version();
 int EmbeddedCLI_Execute();
 
 // List of functions pointers corresponding to each command
-int (*commands_functions_list[])(){
+int (*EmbeddedCLI_commands_functions_list[])(){
     &EmbeddedCLI_Help,
     &EmbeddedCLI_Version,
 };
  
 // List of command names
-const char *commands_names_list[] = {
+const char *EmbeddedCLI_commands_names_list[] = {
     "help",
     "version"
 };
 
-/* 
-// List of sub command of cmd 3 
-const char *led_args[] = {
-    "cmd1",
-    "cmd2",
-    "cmd3"
-};
-*/
+int system_num_commands = sizeof(Commands_Names_List) / sizeof(char *);
+int EmbeddedCLI_num_commands = sizeof(EmbeddedCLI_commands_names_list) / sizeof(char *);
 
-int num_commands = sizeof(commands_names_list) / sizeof(char *);
-
-/*
-int cmd_3(){
-  Serial.println("cmd 3");
-  if(strcmp(args[1], led_args[0]) == 0){
-      Serial.println("sub cmd 1 of cmd 1");
-  }
-  return 0;
-}
-*/
 
 // ECLI Core
 int EmbeddedCLI_Help(){
   Serial.println("The following commands are available:");
-  // print commands
-  for(int i=0; i<num_commands; i++){
+  // print commands of Embedded CLI core
+  for(int i=0; i<EmbeddedCLI_num_commands; i++){
     Serial.print("  ");
-    Serial.println(commands_names_list[i]);
+    Serial.println(EmbeddedCLI_commands_names_list[i]);
   }
+  // print commands of system
+  for(int i=0; i<system_num_commands; i++){
+    Serial.print("  ");
+    Serial.println(Commands_Names_List[i]);
+  }
+  Serial.println("");
   Serial.println("");
   return 0;
 }
@@ -137,22 +202,32 @@ void EmbeddedCLI_Loop(){
         break;
       }
     }
-    // Serial.println(counter);
 
     EmbeddedCLI_Execute();
-
+    memset(line, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+    memset(args, 0, sizeof(args[0][0]) * EMBEDDEDCLI_MAX_ARGS * EMBEDDEDCLI_ARG_BUF_SIZE);
   }
 }
 
 int EmbeddedCLI_Execute(){  
   // search about the command
-  for(int i=0; i<num_commands; i++){
+  for(int i=0; i<EmbeddedCLI_num_commands; i++){
     // search about the command in the commands names list
-    if(strcmp(args[0], commands_names_list[i]) == 0){
+    if(strcmp(args[0], EmbeddedCLI_commands_names_list[i]) == 0){
       // if found it execute the function 
-      return(*commands_functions_list[i])();
+      return(*EmbeddedCLI_commands_functions_list[i])();
     }
   }
+
+  // search about the command
+  for(int i=0; i<system_num_commands; i++){
+    // search about the command in the commands names list
+    if(strcmp(args[0], Commands_Names_List[i]) == 0){
+      // if found it execute the function 
+      return(*Commands_Functions_List[i])();
+    }
+  }
+
   // if did not found the command
   Serial.println("Invalid command. Type \"help\" for more.");
   return 0;
