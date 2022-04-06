@@ -13,7 +13,9 @@ Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems
 ```
 
 ### Library Features 
-- Know information about firmware 
+- Human readable format 
+- Check Message length
+- Know information about firmware (version, developers, etc)
 - Control of the system components 
 - Know the system components status 
 - Test the system components for debugging purposes
