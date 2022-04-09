@@ -31,8 +31,18 @@ performance of this software or code or scripts or any files in this source.
 
 \********************************************************************************/
 
+/****** START CONFIG ******/
+
+// Microcontroller HAL files
+#include "atmelhal/hal_sources.h"
+
+/****** END CONFIG ******/
+
+
 #ifndef EMBEDDEDCLI_H
 #define EMBEDDEDCLI_H
+
+/****** START CONFIG ******/
 
 #define EMBEDDEDCLI_UART_BUS_SPEED     9600
 #define EMBEDDEDCLI_LED                13    // GPIO connected to led to debug ECLI
@@ -47,6 +57,8 @@ int cmd2();
 // Command 3 example
 int cmd3();
 
+/****** END CONFIG ******/
+
 // ecli config defines
 #define EMBEDDEDCLI_VERSION       "v1.0.0"
 
@@ -56,10 +68,11 @@ int cmd3();
 #define EMBEDDEDCLI_MAX_ARGS      8     // Max number of arguments
 
 // ecli core variables
-extern bool EmbeddedCLI_Error_Flag;
+extern uint8_t embeddedcli_error;
 
 // ecli core functions
 
-void EmbeddedCLI_Init(void);
+void embeddedcli_init(void);
+void embeddedcli_receive(void);
 
 #endif
