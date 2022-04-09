@@ -46,6 +46,16 @@ const static struct {
 };
 uint8_t embeddedcli_cmd_user_count = sizeof embeddedcli_cmd_user / sizeof embeddedcli_cmd_user[0];
 
+int embeddedcli_cmd_user_call(const char *name){
+  for (uint8_t i = 0; i < embeddedcli_cmd_user_count; i++) {
+    if (!strcmp(embeddedcli_cmd_user[i].name, name) && embeddedcli_cmd_user[i].func) {
+      embeddedcli_cmd_user[i].func();
+      return 0;
+    }
+  }
+  return 0;
+}
+
 void cmd1(void){
     char commands[] = "\n command 1 \n";
     hal_serial_UART0_send((uint8_t *)&commands,sizeof(commands)); 
