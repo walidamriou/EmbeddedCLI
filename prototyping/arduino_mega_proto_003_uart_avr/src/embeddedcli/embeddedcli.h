@@ -74,5 +74,11 @@ extern uint8_t embeddedcli_error;
 
 void embeddedcli_init(void);
 void embeddedcli_receive(void);
+// to get help
+int EmbeddedCLI_Help(void);
+// to get version
+int EmbeddedCLI_Version(void);
+// execute core function
+int EmbeddedCLI_Execute(void);
 
 #endif
