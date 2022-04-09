@@ -4,7 +4,7 @@
 int main(void) {
   
   embeddedcli_init();
-
+  EmbeddedCLI_Help();
   //char c[] = "hello google dodo ";
   //uint8_t c  = 104;
   //uint8_t c[]={104,113,107,101,120};
