@@ -1,9 +1,9 @@
 /********************************************************************************\ 
- @file hal_sources.c 
- @brief header file of lib, files, sources used with the HAL files
+ @file hal_sources.h
+ @brief header file of HAL files
  @version 1.0.0
  @author Walid Amriou 
- @date 06/04/2022
+ @date 09/04/2022
 
 * This work is licensed under:
 Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License
@@ -34,14 +34,8 @@ performance of this software or code or scripts or any files in this source.
 #ifndef HAL_SOURCES_H
 #define HAL_SOURCES_H
 
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/power.h>
-#include <avr/sleep.h>
-#include <avr/wdt.h>
 #include <stdint.h>
+
 #include "hal_serial.h"
 #include "hal_serial_user.h"
 
