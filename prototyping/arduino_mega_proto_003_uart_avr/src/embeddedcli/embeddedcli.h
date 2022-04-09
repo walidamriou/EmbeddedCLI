@@ -30,3 +30,36 @@ negligence or other tortious action, arising out of or in connection with the us
 performance of this software or code or scripts or any files in this source.
 
 \********************************************************************************/
+
+#ifndef EMBEDDEDCLI_H
+#define EMBEDDEDCLI_H
+
+#define EMBEDDEDCLI_UART_BUS_SPEED     9600
+#define EMBEDDEDCLI_LED                13    // GPIO connected to led to debug ECLI
+#define DEVICE_NAME                    "Embedded system device test"
+#define DEVICE_FIRMWARE_VERSION        "v1.0.0"
+
+// Functions commands 
+// Command 1 example
+int cmd1();
+// Command 2 example
+int cmd2();
+// Command 3 example
+int cmd3();
+
+// ecli config defines
+#define EMBEDDEDCLI_VERSION       "v1.0.0"
+
+// ecli core defines
+#define EMBEDDEDCLI_IN_BUF_SIZE   128   // Max input string length
+#define EMBEDDEDCLI_ARG_BUF_SIZE  64    // Max argument string length
+#define EMBEDDEDCLI_MAX_ARGS      8     // Max number of arguments
+
+// ecli core variables
+extern bool EmbeddedCLI_Error_Flag;
+
+// ecli core functions
+
+void EmbeddedCLI_Init(void);
+
+#endif
