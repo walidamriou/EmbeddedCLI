@@ -1,6 +1,6 @@
 
 
-#include "open_atmel_hal/hal_sources.h"
+#include "atmelhal/hal_sources.h"
 
 
 int main(void) {
