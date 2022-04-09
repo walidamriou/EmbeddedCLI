@@ -33,43 +33,120 @@ performance of this software or code or scripts or any files in this source.
 
 #include "embeddedcli.h"
 
-char line[EMBEDDEDCLI_IN_BUF_SIZE];
-char args[EMBEDDEDCLI_MAX_ARGS][EMBEDDEDCLI_ARG_BUF_SIZE];
+/*** start Embedded CLI user fucntions ***/
 
-// List of functions pointers corresponding to each command
-int (*Commands_Functions_List[])()={
-    &cmd1,
-    &cmd2,
-    &cmd3
+const static struct {
+  const char *name; // the name of the command, should be text only
+  uint8_t name_len; // calcuate the length of the name manually and +1 for the null terminator
+  void (*func)(void); // the function to call
+} embeddedcli_cmd_user [] = {
+  { "cmd1",5,cmd1 },
+  { "cmd2",5,cmd2 },
+  { "cmd3",5,cmd3 },
 };
+uint8_t embeddedcli_cmd_user_count = sizeof embeddedcli_cmd_user / sizeof embeddedcli_cmd_user[0];
 
-// List of command names 
-const char *Commands_Names_List[] = {
-    "cmd1",
-    "cmd2",
-    "cmd3"
+void cmd1(void){
+    char commands[] = "\n command 1 \n";
+    hal_serial_UART0_send((uint8_t *)&commands,sizeof(commands)); 
+}
+
+void cmd2(void){ 
+    char commands[] = "\n command 2 \n";
+    hal_serial_UART0_send((uint8_t *)&commands,sizeof(commands)); 
+  
+}
+
+void cmd3(void){
+    char commands[] = "\n command 3 \n";
+    hal_serial_UART0_send((uint8_t *)&commands,sizeof(commands));  
+
+}
+
+/*** end Embedded CLI user fucntions ***/
+
+
+
+
+/*** start Embedded CLI core fucntions ***/
+
+const static struct {
+  const char *name; // the name of the command, should be text only
+  uint8_t name_len; // calcuate the length of the name manually and +1 for the null terminator
+  void (*func)(void); // the function to call
+} embeddedcli_cmd_core [] = {
+  { "help",5,embeddedcli_cmd_help },
+  { "version",8,embeddedcli_cmd_version },
+  { "about",6,embeddedcli_cmd_about },
 };
+uint8_t embeddedcli_cmd_core_count = sizeof embeddedcli_cmd_core / sizeof embeddedcli_cmd_core[0];
 
-// List of sub command of cmd 3 
-const char *Commands_Names_List_cmd3[] = {
-    "cmd31",
-    "cmd32",
-    "cmd33"
-};
-
-// Functions commands 
-
-// Command 1 example
-int cmd1(){
-  //Serial.println("cmd 1");
+int embeddedcli_cmd_core_call(const char *name){
+  for (uint8_t i = 0; i < embeddedcli_cmd_core_count; i++) {
+    if (!strcmp(embeddedcli_cmd_core[i].name, name) && embeddedcli_cmd_core[i].func) {
+      embeddedcli_cmd_core[i].func();
+      return 0;
+    }
+  }
   return 0;
-};
+}
 
-// Command 2 example
-int cmd2(){
-  //Serial.println("cmd 2");
-  return 0;
-};
+void embeddedcli_cmd_help(void) { 
+    char commands_1[] = "\nThe following commands are available: \n";
+    char commands_print_space[] = "   ";
+    char commands_print_newline[] = "\n";
+    hal_serial_UART0_send((uint8_t *)&commands_1,sizeof(commands_1));    
+    // print commands of Embedded CLI core
+    for(uint8_t i=0; i<embeddedcli_cmd_core_count; i++){
+        hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
+        hal_serial_UART0_send((uint8_t *)embeddedcli_cmd_core[i].name,embeddedcli_cmd_core[i].name_len);
+        hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
+    }
+    hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
+  // print commands of system
+  for(uint8_t i=0; i<embeddedcli_cmd_user_count; i++){
+        hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
+        hal_serial_UART0_send((uint8_t *)embeddedcli_cmd_user[i].name,embeddedcli_cmd_user[i].name_len);
+        hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
+  }
+  hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
+  hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
+  
+}
+
+void embeddedcli_cmd_version(void) { 
+    char commands_print_cli_version[]=EMBEDDEDCLI_VERSION;
+    hal_serial_UART0_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
+  }
+void embeddedcli_cmd_about(void) {
+    char text[] = "Hello World 3!\n";
+  hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
+}
+
+/*** end Embedded CLI core fucntions ***/
+
+/*** start Embedded CLI core engine ***/
+void embeddedcli_init(void){
+    hal_serial_UART0_init();
+    char welcome_1[] = "Welcome to ";
+    hal_serial_UART0_send((uint8_t *)&welcome_1,sizeof(welcome_1));
+    char welcome_2[] = DEVICE_NAME;
+    hal_serial_UART0_send((uint8_t *)&welcome_2,sizeof(welcome_2));
+    char welcome_3[] = "\nPowered by ECLI ";
+    hal_serial_UART0_send((uint8_t *)&welcome_3,sizeof(welcome_3));
+    char welcome_4[] = EMBEDDEDCLI_VERSION;
+    hal_serial_UART0_send((uint8_t *)&welcome_4,sizeof(welcome_4));
+    char welcome_5[] = "\nType \"help\" to see a list of commands. \n";
+    hal_serial_UART0_send((uint8_t *)&welcome_5,sizeof(welcome_5));
+
+}
+
+void embeddedcli_receive(void){
+
+}
+/*** end Embedded CLI core engine ***/
+
+/*
 
 // Command 3 example
 int cmd3(){
@@ -96,137 +173,16 @@ int cmd3(){
   }
   return 0;
 }
-
-void embeddedcli_init(void){
-    hal_serial_UART0_init();
-    char welcome_1[] = "Welcome to ";
-    hal_serial_UART0_send((uint8_t *)&welcome_1,sizeof(welcome_1));
-    char welcome_2[] = DEVICE_NAME;
-    hal_serial_UART0_send((uint8_t *)&welcome_2,sizeof(welcome_2));
-    char welcome_3[] = "\nPowered by ECLI ";
-    hal_serial_UART0_send((uint8_t *)&welcome_3,sizeof(welcome_3));
-    char welcome_4[] = EMBEDDEDCLI_VERSION;
-    hal_serial_UART0_send((uint8_t *)&welcome_4,sizeof(welcome_4));
-    char welcome_5[] = "\nType \"help\" to see a list of commands. \n";
-    hal_serial_UART0_send((uint8_t *)&welcome_5,sizeof(welcome_5));
-
-}
-
-void embeddedcli_receive(void){
-
-}
-
-// List of functions pointers corresponding to each command
-int (*EmbeddedCLI_commands_functions_list[])()={
-    &EmbeddedCLI_Help,
-    &EmbeddedCLI_Version,
-};
- 
-// List of command names
-const char *EmbeddedCLI_commands_names_list[] = {
-    "help",
-    "version"
-};
+*/
 
 
-int system_num_commands = sizeof(Commands_Names_List) / sizeof(char *);
-int EmbeddedCLI_num_commands = sizeof(EmbeddedCLI_commands_names_list) / sizeof(char *);
 
-// ECLI Core
-int EmbeddedCLI_Help(){
-    char commands_1[] = "\nThe following commands are available: \n";
-    char commands_print_space[] = "   ";
-    char commands_print_newline[] = "\n";
-    //char commands_print_command[];
-    hal_serial_UART0_send((uint8_t *)&commands_1,sizeof(commands_1));
-    // print commands of Embedded CLI core
-    for(int i=0; i<EmbeddedCLI_num_commands; i++){
-        hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
-        //char commands_print_command[50] = EmbeddedCLI_commands_names_list[i];
-        //char command_print[50]=EmbeddedCLI_commands_names_list[i];
-        hal_serial_UART0_send((uint8_t *)&EmbeddedCLI_commands_names_list,sizeof(EmbeddedCLI_commands_names_list));
-        hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
-    }
-  // print commands of system
-  for(int i=0; i<system_num_commands; i++){
-    hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
-    //commands_print_command[] = Commands_Names_List[i];
-    hal_serial_UART0_send((uint8_t *)&Commands_Names_List[i],sizeof(Commands_Names_List[i]));
-  }
-  hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
-  hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
-  return 0;
-}
 
-int EmbeddedCLI_Version(){
-    char commands_print_cli_version[]=EMBEDDEDCLI_VERSION;
-    hal_serial_UART0_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
-    return 0;
-}
+
+
+
 
 /*
-bool EmbeddedCLI_Error_Flag=false;
-
-// init elci system
-void EmbeddedCLI_Init(){
-    // Config UART bus
-    Serial.begin(EMBEDDEDCLI_UART_BUS_SPEED);
-    // Config LED debug
-    pinMode(EMBEDDEDCLI_LED, OUTPUT);
-
-    Serial.print("Welcome to ");
-    Serial.println(DEVICE_NAME);
-    Serial.print("Powered by ECLI ");
-    Serial.println(EMBEDDEDCLI_VERSION);
-    Serial.println("Type \"help\" to see a list of commands.");
-}
-
-// Functions commands 
-// to get help
-int EmbeddedCLI_Help();
-// to get version
-int EmbeddedCLI_Version();
-// execute core function
-int EmbeddedCLI_Execute();
-
-// List of functions pointers corresponding to each command
-int (*EmbeddedCLI_commands_functions_list[])(){
-    &EmbeddedCLI_Help,
-    &EmbeddedCLI_Version,
-};
- 
-// List of command names
-const char *EmbeddedCLI_commands_names_list[] = {
-    "help",
-    "version"
-};
-
-int system_num_commands = sizeof(Commands_Names_List) / sizeof(char *);
-int EmbeddedCLI_num_commands = sizeof(EmbeddedCLI_commands_names_list) / sizeof(char *);
-
-
-// ECLI Core
-int EmbeddedCLI_Help(){
-  Serial.println("The following commands are available:");
-  // print commands of Embedded CLI core
-  for(int i=0; i<EmbeddedCLI_num_commands; i++){
-    Serial.print("  ");
-    Serial.println(EmbeddedCLI_commands_names_list[i]);
-  }
-  // print commands of system
-  for(int i=0; i<system_num_commands; i++){
-    Serial.print("  ");
-    Serial.println(Commands_Names_List[i]);
-  }
-  Serial.println("");
-  Serial.println("");
-  return 0;
-}
-
-int EmbeddedCLI_Version(){
-  Serial.println(EMBEDDEDCLI_VERSION);
-  return 0;
-}
 
 void EmbeddedCLI_Loop(){
     //Serial.print("> ");
