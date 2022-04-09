@@ -51,11 +51,11 @@ performance of this software or code or scripts or any files in this source.
 
 // Functions commands 
 // Command 1 example
-int cmd1();
+void cmd1(void);
 // Command 2 example
-int cmd2();
+void cmd2(void);
 // Command 3 example
-int cmd3();
+void cmd3(void);
 
 /****** END CONFIG ******/
 
@@ -77,7 +77,9 @@ void embeddedcli_receive(void);
 // to get help
 int EmbeddedCLI_Help(void);
 // to get version
-int EmbeddedCLI_Version(void);
+void embeddedcli_cmd_help(void);
+void embeddedcli_cmd_version(void);
+void embeddedcli_cmd_about(void);
 // execute core function
 int EmbeddedCLI_Execute(void);
 
