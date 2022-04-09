@@ -62,7 +62,7 @@ int cmd2(){
 int cmd3(){
   Serial.println("cmd 3");
   Serial.println(args[1]);
-  if(strcmp(args[1], " ") == 0){
+  if(args[1] == 0){
     return 0;
   }
   if(strcmp(args[1], Commands_Names_List_cmd3[0]) == 0){
