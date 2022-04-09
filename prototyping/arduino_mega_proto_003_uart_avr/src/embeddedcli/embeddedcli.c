@@ -46,7 +46,7 @@ const static struct {
 };
 uint8_t embeddedcli_cmd_user_count = sizeof embeddedcli_cmd_user / sizeof embeddedcli_cmd_user[0];
 
-int embeddedcli_cmd_user_call(const char *name){
+uint8_t embeddedcli_cmd_user_call(const char *name){
   for (uint8_t i = 0; i < embeddedcli_cmd_user_count; i++) {
     if (!strcmp(embeddedcli_cmd_user[i].name, name) && embeddedcli_cmd_user[i].func) {
       embeddedcli_cmd_user[i].func();
@@ -91,13 +91,16 @@ const static struct {
 };
 uint8_t embeddedcli_cmd_core_count = sizeof embeddedcli_cmd_core / sizeof embeddedcli_cmd_core[0];
 
-int embeddedcli_cmd_core_call(const char *name){
+uint8_t embeddedcli_cmd_core_call(const char *name){
   for (uint8_t i = 0; i < embeddedcli_cmd_core_count; i++) {
     if (!strcmp(embeddedcli_cmd_core[i].name, name) && embeddedcli_cmd_core[i].func) {
       embeddedcli_cmd_core[i].func();
       return 0;
     }
   }
+  // error command not found
+  char error_command_not_found[] = "\n error command not found \n";
+  hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
   return 0;
 }
 
@@ -148,127 +151,54 @@ void embeddedcli_init(void){
     hal_serial_UART0_send((uint8_t *)&welcome_4,sizeof(welcome_4));
     char welcome_5[] = "\nType \"help\" to see a list of commands. \n";
     hal_serial_UART0_send((uint8_t *)&welcome_5,sizeof(welcome_5));
-
+    // Enable interrupts
+	  sei();
 }
 
-void embeddedcli_receive(void){
+char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
+//#define EMBEDDEDCLI_IN_BUF_SIZE   128   // Max input string length
+uint8_t embeddedcli_receive_buffer_counter = 0;
+char embeddedcli_receive_buffer_8bit=0;
+char embeddedcli_receive_end_cmd='\n';
 
-}
-/*** end Embedded CLI core engine ***/
+uint8_t embeddedcli_receive(void){
+  char data_received[] = "data received ";
+  hal_serial_UART0_send((uint8_t *)&data_received,sizeof(data_received));
+  
+  embeddedcli_receive_buffer_counter++;
+  // check if buffer is full
+  if(sizeof(embeddedcli_receive_buffer_counter > EMBEDDEDCLI_IN_BUF_SIZE)){
+    // clear buffer
+    memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
+    // clear counter
+    embeddedcli_receive_buffer_counter=0;
+    // return buffer is full error
+    
+    // go out from the interrupt handler
+    return 0; 
+  }
+  // check if receive \n
+  embeddedcli_receive_buffer_8bit=UDR0;
+  if(embeddedcli_receive_buffer_8bit==embeddedcli_receive_end_cmd){
+    // if receive \n so search about the command and call the function
+    // search about the command
+    // search in the core commands
+    embeddedcli_cmd_core_call("about");
+    // clear buffer
+    memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
+    // clear counter
+    embeddedcli_receive_buffer_counter=0;
+    // return buffer is full error
 
-/*
-
-// Command 3 example
-int cmd3(){
-  //Serial.println("cmd 3");
-  //Serial.println(args[1]);
-  if(args[1] == 0){
-    return 0;
-  }
-  if(strcmp(args[1], Commands_Names_List_cmd3[0]) == 0){
-    //Serial.println("sub cmd 1 of cmd 3");
-    return 0;
-  }
-  else if(strcmp(args[1], Commands_Names_List_cmd3[1]) == 0){
-    //Serial.println("sub cmd 2 of cmd 3");
-    return 0;
-  }
-  else if(strcmp(args[1], Commands_Names_List_cmd3[2]) == 0){
-    //Serial.println("sub cmd 3 of cmd 3");
+    // go out from the interrupt handler
     return 0;
   }
   else{
-    //Serial.println("Invalid command. Type \"help\" for more.");
-    return 0;
+    // if not receive \n so save the char in the buffer
+    embeddedcli_receive_buffer[embeddedcli_receive_buffer_counter]=embeddedcli_receive_buffer_8bit;
+    return 1;
   }
-  return 0;
+
+return 0;
 }
-*/
-
-
-
-
-
-
-
-
-/*
-
-void EmbeddedCLI_Loop(){
-    //Serial.print("> ");
-
-  String line_string;
-  // wait until there are data in the ECLI line
-  while(!Serial.available());
-  // if there are data in the ECLI line
-  if(Serial.available()){
-    // read data until \n
-    line_string = Serial.readStringUntil('\n');
-    //if the data length not large then ECLI_IN_BUF_SIZE
-    if(line_string.length() < EMBEDDEDCLI_IN_BUF_SIZE){
-      // convert data received to line array 
-      line_string.toCharArray(line, EMBEDDEDCLI_IN_BUF_SIZE);
-      Serial.println(line_string);
-    }
-    else{
-      Serial.println("Input string too long.");
-      EmbeddedCLI_Error_Flag = true;
-    }
-
-    char *argument;
-    int counter = 0;
-    // breaks string str into a series of tokens using the delimiter delim, here it is " "
-    argument = strtok(line, " ");
-
-    while((argument != NULL)){
-      // if the counter below check the number of arguments 
-      if(counter < EMBEDDEDCLI_MAX_ARGS){
-        // if the argument below check the number of arguments
-        if(strlen(argument) < EMBEDDEDCLI_MAX_ARGS){
-          // strcpy(destination, source)
-          strcpy(args[counter],argument);
-          //Serial.println(argument);
-          argument = strtok(NULL, " ");
-          counter++;
-        }
-        else{
-          Serial.println("Input string too long.");
-          EmbeddedCLI_Error_Flag = true;
-          break;
-        }
-      }
-      else{
-        break;
-      }
-    }
-
-    EmbeddedCLI_Execute();
-    memset(line, 0, EMBEDDEDCLI_IN_BUF_SIZE);
-    memset(args, 0, sizeof(args[0][0]) * EMBEDDEDCLI_MAX_ARGS * EMBEDDEDCLI_ARG_BUF_SIZE);
-  }
-}
-
-int EmbeddedCLI_Execute(){  
-  // search about the command
-  for(int i=0; i<EmbeddedCLI_num_commands; i++){
-    // search about the command in the commands names list
-    if(strcmp(args[0], EmbeddedCLI_commands_names_list[i]) == 0){
-      // if found it execute the function 
-      return(*EmbeddedCLI_commands_functions_list[i])();
-    }
-  }
-
-  // search about the command
-  for(int i=0; i<system_num_commands; i++){
-    // search about the command in the commands names list
-    if(strcmp(args[0], Commands_Names_List[i]) == 0){
-      // if found it execute the function 
-      return(*Commands_Functions_List[i])();
-    }
-  }
-
-  // if did not found the command
-  Serial.println("Invalid command. Type \"help\" for more.");
-  return 0;
-}
-*/
+/*** end Embedded CLI core engine ***/
