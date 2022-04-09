@@ -33,6 +33,10 @@ performance of this software or code or scripts or any files in this source.
 
 #include "hal_ global.h"
 
+/****** START CONFIG ******/
+#include "../embeddedcli/embeddedcli.h"
+/****** END CONFIG ******/
+
 #ifndef HAL_SERIAL_USER_H
 #define HAL_SERIAL_USER_H
 
