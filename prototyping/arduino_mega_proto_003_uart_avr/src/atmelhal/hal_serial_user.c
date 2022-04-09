@@ -39,7 +39,7 @@ performance of this software or code or scripts or any files in this source.
  * @return void
  */
 ISR(USART0_RX_vect){
-/*** start Serial Config ***/
-
-/*** end Serial Config ***/
+    /*** start Serial Config ***/
+    embeddedcli_receive();
+    /*** end Serial Config ***/
 }
