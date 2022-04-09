@@ -1,8 +1,9 @@
 #include "atmelhal/hal_sources.h"
+#include "embeddedcli/embeddedcli.h"
 
 int main(void) {
   
-  hal_serial_UART0_init();
+  embeddedcli_init();
 
   //char c[] = "hello google dodo ";
   uint8_t c  = 104;
