@@ -1,7 +1,4 @@
-
-
 #include "atmelhal/hal_sources.h"
-
 
 int main(void) {
   
@@ -12,11 +9,8 @@ int main(void) {
   //uint8_t c[]={104,113,107,101,120};
   hal_serial_UART0_send((uint8_t *)&c,sizeof(c));
 
-
-
-
   // Enable interrupts
-	//sei();
+	sei();
   while (1) {
 
   } 
