@@ -143,7 +143,9 @@ int EmbeddedCLI_Help(){
     for(int i=0; i<EmbeddedCLI_num_commands; i++){
         hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
         //char commands_print_command[50] = EmbeddedCLI_commands_names_list[i];
-        hal_serial_UART0_send((uint8_t *)&EmbeddedCLI_commands_names_list[i],sizeof(EmbeddedCLI_commands_names_list[i]));
+        //char command_print[50]=EmbeddedCLI_commands_names_list[i];
+        hal_serial_UART0_send((uint8_t *)&EmbeddedCLI_commands_names_list,sizeof(EmbeddedCLI_commands_names_list));
+        hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
     }
   // print commands of system
   for(int i=0; i<system_num_commands; i++){
