@@ -30,3 +30,13 @@ negligence or other tortious action, arising out of or in connection with the us
 performance of this software or code or scripts or any files in this source.
 
 \********************************************************************************/
+
+#include "embeddedcli.h"
+
+void embeddedcli_init(void){
+    hal_serial_UART0_init();
+}
+
+void embeddedcli_receive(void){
+
+}
