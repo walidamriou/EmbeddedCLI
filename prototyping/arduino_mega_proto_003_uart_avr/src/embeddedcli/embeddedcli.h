@@ -73,7 +73,7 @@ extern uint8_t embeddedcli_error;
 // ecli core functions
 
 void embeddedcli_init(void);
-void embeddedcli_receive(void);
+uint8_t embeddedcli_receive(void);
 // to get help
 int EmbeddedCLI_Help(void);
 // to get version
