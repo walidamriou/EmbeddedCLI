@@ -53,7 +53,7 @@ uint8_t embeddedcli_cmd_user_call(const char *name){
       return 0;
     }
   }
-  return 0;
+  return 1;
 }
 
 void cmd1(void){
@@ -80,6 +80,9 @@ void cmd3(void){
 
 /*** start Embedded CLI core fucntions ***/
 
+
+
+
 const static struct {
   const char *name; // the name of the command, should be text only
   uint8_t name_len; // calcuate the length of the name manually and +1 for the null terminator
@@ -91,11 +94,17 @@ const static struct {
 };
 uint8_t embeddedcli_cmd_core_count = sizeof embeddedcli_cmd_core / sizeof embeddedcli_cmd_core[0];
 
+
+
+
 uint8_t embeddedcli_cmd_core_call(const char *name){
   for (uint8_t i = 0; i < embeddedcli_cmd_core_count; i++) {
     if (!strcmp(embeddedcli_cmd_core[i].name, name) && embeddedcli_cmd_core[i].func) {
       embeddedcli_cmd_core[i].func();
       return 0;
+    }
+    else{
+      return 1;
     }
   }
   // error command not found
@@ -103,6 +112,9 @@ uint8_t embeddedcli_cmd_core_call(const char *name){
   hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
   return 0;
 }
+
+
+
 
 void embeddedcli_cmd_help(void) { 
     char commands_1[] = "\nThe following commands are available: \n";
@@ -127,18 +139,30 @@ void embeddedcli_cmd_help(void) {
   
 }
 
+
+
+
 void embeddedcli_cmd_version(void) { 
     char commands_print_cli_version[]=EMBEDDEDCLI_VERSION;
     hal_serial_UART0_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
   }
 void embeddedcli_cmd_about(void) {
-    char text[] = "Hello World 3!\n";
+    char text[] = "EmbeddedCLI developed by Walid Amriou\n www.walidamriou.com";
   hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
 }
 
+
+
+
 /*** end Embedded CLI core fucntions ***/
 
+
+
+
 /*** start Embedded CLI core engine ***/
+
+
+
 void embeddedcli_init(void){
     hal_serial_UART0_init();
     char welcome_1[] = "Welcome to ";
@@ -155,35 +179,62 @@ void embeddedcli_init(void){
 	  sei();
 }
 
+
+
+
+void embeddedcli_cmd_core_seach(const char *cmd_search){
+
+  uint8_t a = embeddedcli_cmd_core_call(cmd_search);
+  if(a==0){
+    char return0[] = "\n return 0 \n";
+    hal_serial_UART0_send((uint8_t *)&return0,sizeof(return0));
+  }
+  else{
+    char return1[] = "\n return 1 \n";
+    hal_serial_UART0_send((uint8_t *)&return1,sizeof(return1));
+  }
+
+  if(embeddedcli_cmd_core_call(cmd_search)==0){
+
+  }
+  else if(embeddedcli_cmd_user_call(cmd_search)==0){
+
+  }
+  else{
+    char welcome_5[] = "\nError! Command non exist. \n Type \"help\" to see the list of commands available. \n";
+    hal_serial_UART0_send((uint8_t *)&welcome_5,sizeof(welcome_5));
+  }
+}
+
 char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
 //#define EMBEDDEDCLI_IN_BUF_SIZE   128   // Max input string length
 uint8_t embeddedcli_receive_buffer_counter = 0;
-char embeddedcli_receive_buffer_8bit=0;
 char embeddedcli_receive_end_cmd='\n';
 
-uint8_t embeddedcli_receive(void){
-  char data_received[] = "data received ";
-  hal_serial_UART0_send((uint8_t *)&data_received,sizeof(data_received));
-  
+uint8_t embeddedcli_receive(char data_received){ 
+  if(data_received==' '){
+    return 0;
+  }  
   embeddedcli_receive_buffer_counter++;
   // check if buffer is full
-  if(sizeof(embeddedcli_receive_buffer_counter > EMBEDDEDCLI_IN_BUF_SIZE)){
+  if(embeddedcli_receive_buffer_counter > EMBEDDEDCLI_IN_BUF_SIZE){
     // clear buffer
     memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
     // clear counter
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
-    
+    char Error_longer[] = "\nError! Command longer than allowed. \n Type \"help\" to see the list of commands available. \n";
+    hal_serial_UART0_send((uint8_t *)&Error_longer,sizeof(Error_longer));
     // go out from the interrupt handler
     return 0; 
   }
   // check if receive \n
-  embeddedcli_receive_buffer_8bit=UDR0;
-  if(embeddedcli_receive_buffer_8bit==embeddedcli_receive_end_cmd){
+  if(data_received==embeddedcli_receive_end_cmd){
     // if receive \n so search about the command and call the function
     // search about the command
     // search in the core commands
-    embeddedcli_cmd_core_call("about");
+
+    embeddedcli_cmd_core_seach(embeddedcli_receive_buffer);
     // clear buffer
     memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
     // clear counter
@@ -195,7 +246,9 @@ uint8_t embeddedcli_receive(void){
   }
   else{
     // if not receive \n so save the char in the buffer
-    embeddedcli_receive_buffer[embeddedcli_receive_buffer_counter]=embeddedcli_receive_buffer_8bit;
+    embeddedcli_receive_buffer[embeddedcli_receive_buffer_counter]=data_received;
+    hal_serial_UART0_send((uint8_t *)&embeddedcli_receive_buffer,sizeof(embeddedcli_receive_buffer));
+    
     return 1;
   }
 
