@@ -47,7 +47,7 @@ void hal_serial_UART0_init(void){
   UCSR0A &= ~(1 << U2X0); // clear U2X0 to 0 (disable Double the USART Transmission Speed)
   #endif
   // Transmitter and receive Enable (RXEN0, TXEN0) of UART 0 
-  UCSR0B = (1 << TXEN0) | (1 << RXEN0); // set bit TXEN0 and RXEN0 to 1 in UCSR0B register
+  UCSR0B = (1 << TXEN0) | (1 << RXEN0)|(1<<RXCIE0); // set bit TXEN0 and RXEN0 to 1 in UCSR0B register
   // The UCSRnC(USART Control and Status Register n C) is a register for parity, stop bit and so on.
   // Sets the length of data bit 8 data bits, 1 stop bit
   UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);   
@@ -57,11 +57,13 @@ void hal_serial_UART0_init(void){
 void hal_serial_UART0_send(uint8_t * const tx_data_addr, uint16_t tx_data_len){
   // save the address of the data to be sent in buffer
   uint8_t *tx_data_addr_buf = tx_data_addr;
+  cli();
   for (uint16_t i = 0; i < tx_data_len; i++){
     loop_until_bit_is_set(UCSR0A, UDRE0); // loop unitl UDRE0 (USART Data Register) is Empty  
     UDR0 = *tx_data_addr_buf;
     tx_data_addr_buf++;
   }
+  sei();
 }
 
 
