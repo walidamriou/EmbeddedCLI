@@ -40,10 +40,10 @@ performance of this software or code or scripts or any files in this source.
  */
 ISR(USART0_RX_vect){
     /*** start Serial Config ***/
-    //cli();
+    cli();
     char data_received = UDR0;
     hal_serial_UART0_send((uint8_t *)&data_received,sizeof(data_received));
     embeddedcli_receive(data_received);
-    //sei();
+    sei();
     /*** end Serial Config ***/
 }
