@@ -35,6 +35,7 @@ performance of this software or code or scripts or any files in this source.
 #define HAL_SOURCES_H
 
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "hal_serial.h"
