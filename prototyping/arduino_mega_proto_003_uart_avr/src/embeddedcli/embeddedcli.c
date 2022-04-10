@@ -183,6 +183,7 @@ void embeddedcli_init(void){
 
 
 void embeddedcli_cmd_core_seach(const char *cmd_search){
+hal_serial_UART0_send((uint8_t *)&cmd_search,sizeof(cmd_search));
 
   uint8_t a = embeddedcli_cmd_core_call(cmd_search);
   if(a==0){
@@ -206,20 +207,21 @@ void embeddedcli_cmd_core_seach(const char *cmd_search){
   }
 }
 
+
+
+
 char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
 //#define EMBEDDEDCLI_IN_BUF_SIZE   128   // Max input string length
 uint8_t embeddedcli_receive_buffer_counter = 0;
 char embeddedcli_receive_end_cmd='\n';
 
+
+
 uint8_t embeddedcli_receive(char data_received){ 
-  if(data_received==' '){
-    return 0;
-  }  
-  embeddedcli_receive_buffer_counter++;
   // check if buffer is full
-  if(embeddedcli_receive_buffer_counter > EMBEDDEDCLI_IN_BUF_SIZE){
+  if((embeddedcli_receive_buffer_counter+1) > EMBEDDEDCLI_IN_BUF_SIZE){
     // clear buffer
-    memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
+    memset(embeddedcli_receive_buffer, 0, embeddedcli_receive_buffer_counter);
     // clear counter
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
@@ -233,25 +235,33 @@ uint8_t embeddedcli_receive(char data_received){
     // if receive \n so search about the command and call the function
     // search about the command
     // search in the core commands
+    char embeddedcli_receive_buffer_temp[embeddedcli_receive_buffer_counter];
+    for (uint8_t i = 0; i < embeddedcli_receive_buffer_counter; i++){
+      embeddedcli_receive_buffer_temp[i]=embeddedcli_receive_buffer[i];
+    }
+    char word_pass[] = "\nword pass:";
+    hal_serial_UART0_send((uint8_t *)&word_pass,sizeof(word_pass));
 
-    embeddedcli_cmd_core_seach(embeddedcli_receive_buffer);
+    hal_serial_UART0_send((uint8_t *)&embeddedcli_receive_buffer_temp,sizeof(embeddedcli_receive_buffer_temp));
+    embeddedcli_cmd_core_seach(embeddedcli_receive_buffer_temp);
     // clear buffer
-    memset(embeddedcli_receive_buffer, 0, sizeof embeddedcli_receive_buffer);
+    memset(embeddedcli_receive_buffer, 0, embeddedcli_receive_buffer_counter);
     // clear counter
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
-
     // go out from the interrupt handler
     return 0;
   }
   else{
     // if not receive \n so save the char in the buffer
     embeddedcli_receive_buffer[embeddedcli_receive_buffer_counter]=data_received;
-    hal_serial_UART0_send((uint8_t *)&embeddedcli_receive_buffer,sizeof(embeddedcli_receive_buffer));
-    
+    embeddedcli_receive_buffer_counter++;
     return 1;
   }
 
 return 0;
 }
+
+
+
 /*** end Embedded CLI core engine ***/
