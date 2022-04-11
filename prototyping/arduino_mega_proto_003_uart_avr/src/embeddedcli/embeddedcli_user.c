@@ -1,5 +1,5 @@
 /********************************************************************************\ 
- @file embeddedcli.c
+ @file embeddedcli_user.c
  @brief source file of Embedded CLI for user to config
  @version 1.0.0
  @author Walid Amriou 
