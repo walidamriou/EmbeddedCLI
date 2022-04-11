@@ -67,6 +67,8 @@ void embeddedcli_cmd_version(void) {
 
 
 }
+
+
 void embeddedcli_cmd_about(void) {
     char text[] = "\n\n EmbeddedCLI developed by Walid Amriou \n www.walidamriou.com \n\n";
   hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
@@ -79,10 +81,7 @@ void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cm
 /*** end Embedded CLI core fucntions ***/
 
 
-
-
 /*** start Embedded CLI core engine ***/
-
 void embeddedcli_init(void){
     hal_serial_UART0_init();
     hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
@@ -121,7 +120,6 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
   hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
   return 1;
 }
-
 
 uint8_t embeddedcli_receive(char data_received){ 
   static char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
