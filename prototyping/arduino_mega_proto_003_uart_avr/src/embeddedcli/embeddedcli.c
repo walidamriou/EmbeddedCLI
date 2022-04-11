@@ -79,7 +79,7 @@ void embeddedcli_init(void){
 }
 
 char *core_cmd_list[CMD_NUMBER] = {"help", "version", "about"};
-uint8_t core_cmd_len[CMD_NUMBER]={5,8,5};
+uint8_t core_cmd_len[CMD_NUMBER]={5,8,6};
 
 void embeddedcli_cmd_help(void) { 
     char commands_1[] = "\n\n The following commands are available: \n";
@@ -151,8 +151,7 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
     }
   }
   }
-  char error_command_not_found[] = "\nError! Command non exist. \n Type \"help\" to see the list of commands available. \n";
-  hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
+  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_ERROR_NOTFOUND_TXT,sizeof(EMBEDDEDCLI_ERROR_NOTFOUND_TXT)); 
   memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
   memset(cmd_search, 0, data_len);
   return 0;
@@ -166,8 +165,8 @@ uint8_t embeddedcli_receive(char data_received){
     // clear counter
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
-    char Error_longer[] = "\nError! Command longer than allowed. \n Type \"help\" to see the list of commands available. \n";
-    hal_serial_UART0_send((uint8_t *)&Error_longer,sizeof(Error_longer));
+    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_ERROR_LONGSIZE_TXT,sizeof(EMBEDDEDCLI_ERROR_LONGSIZE_TXT));
+    memset(embeddedcli_receive_buffer, 0, embeddedcli_receive_buffer_counter);
     // go out from the interrupt handler
     return 0; 
   }
