@@ -67,6 +67,9 @@ performance of this software or code or scripts or any files in this source.
 #include "embeddedcli.h"
 #include "embeddedcli_user.h"
 
+char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
+uint8_t embeddedcli_receive_buffer_counter = 0;
+
 void embeddedcli_init(void){
   /****** START CONFIG ******/
   hal_serial_UART0_init();
@@ -114,6 +117,7 @@ void embeddedcli_cmd_about(void) {
   hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
 }
 
+// store the command functions of core in array
 void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cmd_version, embeddedcli_cmd_about};
 
 uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
@@ -132,6 +136,8 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
     if (!strcmp(core_cmd_list[i], cmd_search)) {
         (*core_func_ptr[i])();
         flag = 1;
+        memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+        memset(cmd_search, 0, data_len);
         return 0;
     }
   }
@@ -139,18 +145,20 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
   for (uint8_t i = 0; i < CMD_NUMBER; i++) {
     if (!strcmp(cmd_list[i], cmd_search)) {
         (*func_ptr[i])();
+        memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+        memset(cmd_search, 0, data_len);
         return 0;
     }
   }
   }
   char error_command_not_found[] = "\nError! Command non exist. \n Type \"help\" to see the list of commands available. \n";
   hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
-  return 1;
+  memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+  memset(cmd_search, 0, data_len);
+  return 0;
 }
 
 uint8_t embeddedcli_receive(char data_received){ 
-  static char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
-  static uint8_t embeddedcli_receive_buffer_counter = 0;
   // check if buffer is full
   if((embeddedcli_receive_buffer_counter+1) > EMBEDDEDCLI_IN_BUF_SIZE){
     // clear buffer
