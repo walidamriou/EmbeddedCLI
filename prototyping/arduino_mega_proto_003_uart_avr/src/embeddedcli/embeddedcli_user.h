@@ -1,5 +1,5 @@
 /********************************************************************************\ 
- @file embeddedcli.h
+ @file embeddedcli_user.h
  @brief header file of Embedded CLI for user to config
  @version 1.0.0
  @author Walid Amriou 
