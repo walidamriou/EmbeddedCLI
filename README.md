@@ -15,14 +15,15 @@ Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems
 ```
 
 #### Library Features 
-- Human readable format 
-- Check Message length
-- Know information about firmware (version, developers, etc)
-- Control of the system components 
-- Know the system components status 
-- Test the system components for debugging purposes
-- Reset/reboot the system
-- Tested with ATmega2560
+- Portable  and flexible to integrate with wide range of Microcontrollers.
+- Human readable format (ASCII).
+- Check Message length (reconfigurable length default 25 bytes).
+- Know information about firmware (version, developers, etc).
+- Control of the system components (using EmbeddedCLI protocol).
+- Know the system components status (using EmbeddedCLI protocol).
+- Test the system components for debugging purposes (using EmbeddedCLI protocol).
+- Reset/reboot the system (depending on Microcontroller HAL config ).
+- Tested with ATmega2560, Atmega328p
   
 #### Notes
 - Works with Arduino monitor with __Both NL & CR__ and __9600__ (Tested with Arduino Mega)
