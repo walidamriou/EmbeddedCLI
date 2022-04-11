@@ -75,7 +75,7 @@ void embeddedcli_init(void){
   hal_serial_UART0_init();
   sei();// Enable interrupts
   /****** END CONFIG ******/
-  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
+  hal_serial_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
 }
 
 char *core_cmd_list[CMD_NUMBER] = {"help", "version", "about"};
@@ -83,30 +83,30 @@ uint8_t core_cmd_len[CMD_NUMBER]={5,8,6};
 
 void embeddedcli_cmd_help(void) { 
     char commands_1[] = "\n\n The following commands are available: \n";
-    hal_serial_UART0_send((uint8_t *)&commands_1,sizeof(commands_1));    
+    hal_serial_send((uint8_t *)&commands_1,sizeof(commands_1));    
     // print commands of Embedded CLI core
     for(uint8_t i=0; i<CORE_CMD_NUMBER; i++){
-        hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
-        hal_serial_UART0_send((uint8_t *)core_cmd_list[i],core_cmd_len[i]);
-        hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
+        hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
+        hal_serial_send((uint8_t *)core_cmd_list[i],core_cmd_len[i]);
+        hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
     }
-    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
+    hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
   // print commands of system
   for(uint8_t i=0; i<CMD_NUMBER; i++){
-        hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
-        hal_serial_UART0_send((uint8_t *)cmd_list[i],cmd_len[i]);
-        hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
+        hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
+        hal_serial_send((uint8_t *)cmd_list[i],cmd_len[i]);
+        hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
   }
-  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
+  hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
   
 }
 
 
 void embeddedcli_cmd_version(void) { 
     char commands_print_cli_version[]=EMBEDDEDCLI_VERSION;
-    hal_serial_UART0_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
-    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
-    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
+    hal_serial_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
+    hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_SPACE,sizeof(EMBEDDEDCLI_PRINT_SPACE));
+    hal_serial_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
 
 
 }
@@ -114,7 +114,7 @@ void embeddedcli_cmd_version(void) {
 
 void embeddedcli_cmd_about(void) {
     char text[] = "\n\n EmbeddedCLI developed by Walid Amriou \n www.walidamriou.com \n\n";
-  hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
+  hal_serial_send((uint8_t *)&text,sizeof(text));
 }
 
 // store the command functions of core in array
@@ -151,7 +151,7 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
     }
   }
   }
-  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_ERROR_NOTFOUND_TXT,sizeof(EMBEDDEDCLI_ERROR_NOTFOUND_TXT)); 
+  hal_serial_send((uint8_t *)&EMBEDDEDCLI_ERROR_NOTFOUND_TXT,sizeof(EMBEDDEDCLI_ERROR_NOTFOUND_TXT)); 
   memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
   memset(cmd_search, 0, data_len);
   return 0;
@@ -165,7 +165,7 @@ uint8_t embeddedcli_receive(char data_received){
     // clear counter
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
-    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_ERROR_LONGSIZE_TXT,sizeof(EMBEDDEDCLI_ERROR_LONGSIZE_TXT));
+    hal_serial_send((uint8_t *)&EMBEDDEDCLI_ERROR_LONGSIZE_TXT,sizeof(EMBEDDEDCLI_ERROR_LONGSIZE_TXT));
     memset(embeddedcli_receive_buffer, 0, embeddedcli_receive_buffer_counter);
     // go out from the interrupt handler
     return 0; 
