@@ -56,14 +56,19 @@ void fun4(){
     char output[] = "\n function 4 \n";
     hal_serial_UART0_send((uint8_t *)&output,sizeof(output));
 }
+// function sub 1 of function 4
+void fun4_1(){
+    char output[] = "\n function sub 1 of function 4 \n";
+    hal_serial_UART0_send((uint8_t *)&output,sizeof(output));
+}
 // save function pointers in a array (Do not change name of this array)
-void (*func_ptr[CMD_NUMBER])() = {fun1, fun2, fun3,fun4};
+void (*func_ptr[CMD_NUMBER])() = {fun1, fun2, fun3,fun4,fun4_1};
 
 // save function names in a array (Do not change name of this array)
-char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3","cmd4"};
+char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3","cmd4","cmd4 sub1"};
 
 // save the command lengths in a array (Do not change name of this array)
-extern uint8_t cmd_len[CMD_NUMBER]={5,5,5,5};
+extern uint8_t cmd_len[CMD_NUMBER]={5,5,5,5,10};
 
 /****** END CONFIG PART ******/
 
