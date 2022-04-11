@@ -34,23 +34,24 @@ performance of this software or code or scripts or any files in this source.
 #include "embeddedcli_user.h"
 
 // List of functions pointers corresponding to each command
+// function 1
 void fun1(){
     char output[] = "\n function 1 \n";
     hal_serial_UART0_send((uint8_t *)&output,sizeof(output));
 }
-
+// function 2
 void fun2(){
     char output[] = "\n function 2 \n";
     hal_serial_UART0_send((uint8_t *)&output,sizeof(output));
 }
-
+// function 3
 void fun3(){
     char output[] = "\n function 3 \n";
     hal_serial_UART0_send((uint8_t *)&output,sizeof(output));
 }
-
+// save function pointers in a array
 void (*func_ptr[CMD_NUMBER])() = {fun1, fun2, fun3};
-
+// save function names in a array
 char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3"};
 extern uint8_t cmd_len[CMD_NUMBER]={5,5,5};
 
