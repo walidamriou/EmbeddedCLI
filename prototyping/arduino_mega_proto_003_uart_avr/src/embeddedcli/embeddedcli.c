@@ -66,7 +66,15 @@ performance of this software or code or scripts or any files in this source.
 
 #include "embeddedcli.h"
 #include "embeddedcli_user.h"
-/*** start Embedded CLI user fucntions ***/
+
+void embeddedcli_init(void){
+  /****** START CONFIG ******/
+  hal_serial_UART0_init();
+  sei();// Enable interrupts
+  /****** END CONFIG ******/
+  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
+}
+
 char *core_cmd_list[CMD_NUMBER] = {"help", "version", "about"};
 uint8_t core_cmd_len[CMD_NUMBER]={5,8,5};
 
@@ -108,19 +116,6 @@ void embeddedcli_cmd_about(void) {
 }
 
 void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cmd_version, embeddedcli_cmd_about};
-
-
-
-/*** end Embedded CLI core fucntions ***/
-
-
-/*** start Embedded CLI core engine ***/
-void embeddedcli_init(void){
-    hal_serial_UART0_init();
-    hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
-    // Enable interrupts
-	  sei();
-}
 
 uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
   char cmd_search[data_len];
@@ -198,4 +193,3 @@ uint8_t embeddedcli_receive(char data_received){
 
 return 0;
 }
-/*** end Embedded CLI core engine ***/
