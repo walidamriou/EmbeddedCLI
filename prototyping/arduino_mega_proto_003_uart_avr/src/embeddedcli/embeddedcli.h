@@ -87,6 +87,8 @@ performance of this software or code or scripts or any files in this source.
 #define EMBEDDEDCLI_PRINT_NEWLINE_CHAR '\n'
 #define EMBEDDEDCLI_PRINT_SPACE " "
 #define EMBEDDEDCLI_WELCOME_TXT " Welcome to " DEVICE_NAME " Powered by Embedded CLI " EMBEDDEDCLI_VERSION "\n Type help to see a list of commands. \n" 
+#define EMBEDDEDCLI_ERROR_NOTFOUND_TXT "\nError! Command non exist. \n Type \"help\" to see the list of commands available. \n"
+#define EMBEDDEDCLI_ERROR_LONGSIZE_TXT "\nError! Command longer than allowed. \n Type \"help\" to see the list of commands available. \n"
 // ecli core variables
 extern uint8_t embeddedcli_error;
 
