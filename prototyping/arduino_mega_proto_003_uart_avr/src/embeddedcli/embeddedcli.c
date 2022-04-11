@@ -34,17 +34,18 @@ performance of this software or code or scripts or any files in this source.
 #include "embeddedcli.h"
 #include "embeddedcli_user.h"
 /*** start Embedded CLI user fucntions ***/
-
+char *core_cmd_list[CMD_NUMBER] = {"help", "version", "about"};
+uint8_t core_cmd_len[CMD_NUMBER]={5,8,5};
 
 void embeddedcli_cmd_help(void) { 
-    char commands_1[] = "\nThe following commands are available: \n";
+    char commands_1[] = "\n\n The following commands are available: \n";
     char commands_print_space[] = "   ";
     char commands_print_newline[] = "\n";
     hal_serial_UART0_send((uint8_t *)&commands_1,sizeof(commands_1));    
     // print commands of Embedded CLI core
-    for(uint8_t i=0; i<3; i++){
+    for(uint8_t i=0; i<CORE_CMD_NUMBER; i++){
         hal_serial_UART0_send((uint8_t *)&commands_print_space,sizeof(commands_print_space));
-        hal_serial_UART0_send((uint8_t *)cmd_list[i],cmd_len[i]);
+        hal_serial_UART0_send((uint8_t *)core_cmd_list[i],core_cmd_len[i]);
         hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
     }
     hal_serial_UART0_send((uint8_t *)&commands_print_newline,sizeof(commands_print_newline));
@@ -61,13 +62,19 @@ void embeddedcli_cmd_help(void) {
 
 
 void embeddedcli_cmd_version(void) { 
+    char space[] = "  \n";
     char commands_print_cli_version[]=EMBEDDEDCLI_VERSION;
     hal_serial_UART0_send((uint8_t *)&commands_print_cli_version,sizeof(commands_print_cli_version));
+    hal_serial_UART0_send((uint8_t *)&space,sizeof(space));
+
 }
 void embeddedcli_cmd_about(void) {
-    char text[] = "EmbeddedCLI developed by Walid Amriou\n www.walidamriou.com";
+    char text[] = "\n\n EmbeddedCLI developed by Walid Amriou \n www.walidamriou.com \n\n";
   hal_serial_UART0_send((uint8_t *)&text,sizeof(text));
 }
+
+void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cmd_version, embeddedcli_cmd_about};
+
 
 
 /*** end Embedded CLI core fucntions ***/
@@ -94,8 +101,8 @@ void embeddedcli_init(void){
 }
 
 uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){
-  char note[] = "\n function received:";
-  hal_serial_UART0_send((uint8_t *)&note,sizeof(note));
+  //char note[] = "\n function received:";
+  //hal_serial_UART0_send((uint8_t *)&note,sizeof(note));
 
   // save the address of the data to be sent in buffer
   
@@ -106,14 +113,26 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
     data_addr_buf++;
   }
   cmd_search[data_len-1]='\0';
-  hal_serial_UART0_send((uint8_t *)&cmd_search,sizeof(cmd_search));
+  //hal_serial_UART0_send((uint8_t *)&cmd_search,sizeof(cmd_search));
 
+  uint8_t flag = 0;
+  for (uint8_t i = 0; i < CORE_CMD_NUMBER; i++) {
+    if (!strcmp(core_cmd_list[i], cmd_search)) {
+        (*core_func_ptr[i])();
+        flag = 1;
+        return 0;
+    }
+  }
+  if(flag == 0){
   for (uint8_t i = 0; i < CMD_NUMBER; i++) {
     if (!strcmp(cmd_list[i], cmd_search)) {
         (*func_ptr[i])();
         return 0;
     }
   }
+  }
+
+
   char error_command_not_found[] = "\nError! Command non exist. \n Type \"help\" to see the list of commands available. \n";
   hal_serial_UART0_send((uint8_t *)&error_command_not_found,sizeof(error_command_not_found)); 
   return 1;
@@ -150,10 +169,10 @@ uint8_t embeddedcli_receive(char data_received){
     for (uint8_t i = 0; i < embeddedcli_receive_buffer_counter; i++){
       embeddedcli_receive_buffer_temp[i]=embeddedcli_receive_buffer[i];
     }
-    char word_pass[] = "\n word pass:";
-    hal_serial_UART0_send((uint8_t *)&word_pass,sizeof(word_pass));
+    //char word_pass[] = "\n word pass:";
+    //hal_serial_UART0_send((uint8_t *)&word_pass,sizeof(word_pass));
 
-    hal_serial_UART0_send((uint8_t *)&embeddedcli_receive_buffer_temp,sizeof(embeddedcli_receive_buffer_temp));
+    //hal_serial_UART0_send((uint8_t *)&embeddedcli_receive_buffer_temp,sizeof(embeddedcli_receive_buffer_temp));
     // next is correct
     embeddedcli_cmd_core_search((uint8_t *)&embeddedcli_receive_buffer_temp,sizeof(embeddedcli_receive_buffer_temp));
     // clear buffer
