@@ -35,35 +35,19 @@ performance of this software or code or scripts or any files in this source.
 
 // Microcontroller HAL files
 #include "atmelhal/hal_sources.h"
-
 /****** END CONFIG ******/
-
 
 #ifndef EMBEDDEDCLI_H
 #define EMBEDDEDCLI_H
 
-/****** START CONFIG ******/
-
-#define EMBEDDEDCLI_UART_BUS_SPEED     9600
-#define EMBEDDEDCLI_LED                13    // GPIO connected to led to debug ECLI
-#define DEVICE_NAME                    "Embedded system device test"
-#define DEVICE_FIRMWARE_VERSION        "v1.0.0"
-
-// Functions commands 
-// Command 1 example
-void cmd1(void);
-// Command 2 example
-void cmd2(void);
-// Command 3 example
-void cmd3(void);
-
-/****** END CONFIG ******/
-
 // ecli config defines
-#define EMBEDDEDCLI_VERSION       "v1.0.0"
+#define EMBEDDEDCLI_VERSION           "v1.0.0"
+#define EMBEDDEDCLI_UART_BUS_SPEED     9600 // Do not change it 
 
 // ecli core defines
-#define EMBEDDEDCLI_IN_BUF_SIZE   128   // Max input string length
+
+#define EMBEDDEDCLI_CMD_SIZE      20    // Max command string length
+#define EMBEDDEDCLI_IN_BUF_SIZE   25   // Max input string length
 #define EMBEDDEDCLI_ARG_BUF_SIZE  64    // Max argument string length
 #define EMBEDDEDCLI_MAX_ARGS      8     // Max number of arguments
 
@@ -82,5 +66,5 @@ void embeddedcli_cmd_version(void);
 void embeddedcli_cmd_about(void);
 // execute core function
 int EmbeddedCLI_Execute(void);
-
+uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len);
 #endif
