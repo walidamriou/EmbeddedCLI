@@ -101,8 +101,8 @@ void embeddedcli_init(void){
 }
 
 uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){
-  //char note[] = "\n function received:";
-  //hal_serial_UART0_send((uint8_t *)&note,sizeof(note));
+  char note[] = "\n function received:";
+  hal_serial_UART0_send((uint8_t *)&note,sizeof(note));
 
   // save the address of the data to be sent in buffer
   
@@ -112,8 +112,12 @@ uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len)
     cmd_search[i] = *data_addr_buf;
     data_addr_buf++;
   }
-  cmd_search[data_len-1]='\0';
-  //hal_serial_UART0_send((uint8_t *)&cmd_search,sizeof(cmd_search));
+  // work with arduino
+  if(cmd_search[data_len]!='\0'){
+    cmd_search[data_len-1]='\0';
+  }
+  
+  hal_serial_UART0_send((uint8_t *)&cmd_search,sizeof(cmd_search));
 
   uint8_t flag = 0;
   for (uint8_t i = 0; i < CORE_CMD_NUMBER; i++) {
