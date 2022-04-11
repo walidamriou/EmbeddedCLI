@@ -36,13 +36,32 @@ performance of this software or code or scripts or any files in this source.
 #ifndef EMBEDDEDCLI_USER_H
 #define EMBEDDEDCLI_USER_H
 
+// The Embedded system device name
 #define DEVICE_NAME                    "Embedded system device test"
+// The Embedded system device Firmware version
 #define DEVICE_FIRMWARE_VERSION        "v1.0.0"
-
+// Number of commands
 #define CMD_NUMBER 3
+
 // functions
+/*
+ * @brief function 1
+ * @param none
+ * @return none
+ */
+ */
 void fun1();
+/*
+ * @brief function 2
+ * @param none
+ * @return none
+ */
 void fun2();
+/*
+ * @brief function 3
+ * @param none
+ * @return none
+ */
 void fun3();
 
 extern void (*func_ptr[CMD_NUMBER])();
