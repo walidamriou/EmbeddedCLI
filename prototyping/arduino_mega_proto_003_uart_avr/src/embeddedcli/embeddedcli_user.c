@@ -52,6 +52,6 @@ void fun3(){
 void (*func_ptr[CMD_NUMBER])() = {fun1, fun2, fun3};
 
 char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3"};
-//extern uint8_t cmd_len[CMD_NUMBER]={5,5,5};
+extern uint8_t cmd_len[CMD_NUMBER]={5,5,5};
 
 
