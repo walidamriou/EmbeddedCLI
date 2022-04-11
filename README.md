@@ -4,7 +4,7 @@
 
 
 #### About 
-Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems 
+Embedded CLI | Open, Lightweight, and Flexible Command Line Interface for Embedded Systems
 
 ```
  _________________                                  _________________________________________
@@ -15,7 +15,7 @@ Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems
 ```
 
 #### Library Features 
-- Portable  and flexible to integrate with wide range of Microcontrollers.
+- Portable  and flexible library to integrate with wide range of Microcontrollers.
 - Human readable format (ASCII).
 - Check Message length (reconfigurable length default 25 bytes).
 - Know information about firmware (version, developers, etc).
