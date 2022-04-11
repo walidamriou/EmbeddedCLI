@@ -37,17 +37,22 @@ performance of this software or code or scripts or any files in this source.
 #define EMBEDDEDCLI_USER_H
 
 /****** START CONFIG PART ******/
+// HAL configuration
+#define hal_serial_send hal_serial_UART0_send // change this to your own function from the HAL library
+                                              // to send data to the serial port
+                                              // hal_serial_send should be 
+                                              // hal_serial_send(uint8_t *data, uint16_t size)
 
-// The Embedded system device name
+// The Embedded system device name configuration
 #define DEVICE_NAME                    "Embedded system device test"
 
-// The Embedded system device Firmware version
+// The Embedded system device Firmware version configuration
 #define DEVICE_FIRMWARE_VERSION        "v1.0.0"
 
-// Number of commands
+// Number of commands configuration
 #define CMD_NUMBER 51
 
-// functions
+// functions configuration
 /*
  * @brief function 1
  * @param none
@@ -356,7 +361,7 @@ void fun49();
 void fun50();
 /****** END CONFIG PART ******/
 
-// array of function pointers
+// array of function pointers 
 extern void (*func_ptr[CMD_NUMBER])();
 
 // array of function names
