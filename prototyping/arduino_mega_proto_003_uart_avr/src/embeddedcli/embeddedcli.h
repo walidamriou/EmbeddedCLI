@@ -52,6 +52,10 @@ performance of this software or code or scripts or any files in this source.
 #define EMBEDDEDCLI_MAX_ARGS      8     // Max number of arguments
 #define CORE_CMD_NUMBER 3
 
+#define EMBEDDEDCLI_PRINT_NEWLINE      "\n"
+#define EMBEDDEDCLI_PRINT_NEWLINE_CHAR '\n'
+#define EMBEDDEDCLI_PRINT_SPACE " "
+#define EMBEDDEDCLI_WELCOME_TXT " Welcome to " DEVICE_NAME " Powered by Embedded CLI " EMBEDDEDCLI_VERSION "\n Type help to see a list of commands. \n" 
 // ecli core variables
 extern uint8_t embeddedcli_error;
 
@@ -66,6 +70,5 @@ void embeddedcli_cmd_help(void);
 void embeddedcli_cmd_version(void);
 void embeddedcli_cmd_about(void);
 // execute core function
-int EmbeddedCLI_Execute(void);
 uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len);
 #endif
