@@ -95,7 +95,6 @@ void embeddedcli_cmd_help(void) {
         hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
   }
   hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
-  hal_serial_UART0_send((uint8_t *)&EMBEDDEDCLI_PRINT_NEWLINE,sizeof(EMBEDDEDCLI_PRINT_NEWLINE));
   
 }
 
