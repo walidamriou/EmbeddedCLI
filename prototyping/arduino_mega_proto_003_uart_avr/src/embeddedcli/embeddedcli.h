@@ -50,6 +50,7 @@ performance of this software or code or scripts or any files in this source.
 #define EMBEDDEDCLI_IN_BUF_SIZE   25   // Max input string length
 #define EMBEDDEDCLI_ARG_BUF_SIZE  64    // Max argument string length
 #define EMBEDDEDCLI_MAX_ARGS      8     // Max number of arguments
+#define CORE_CMD_NUMBER 3
 
 // ecli core variables
 extern uint8_t embeddedcli_error;
