@@ -36,10 +36,14 @@ performance of this software or code or scripts or any files in this source.
 #ifndef EMBEDDEDCLI_USER_H
 #define EMBEDDEDCLI_USER_H
 
+/****** START CONFIG PART ******/
+
 // The Embedded system device name
 #define DEVICE_NAME                    "Embedded system device test"
+
 // The Embedded system device Firmware version
 #define DEVICE_FIRMWARE_VERSION        "v1.0.0"
+
 // Number of commands
 #define CMD_NUMBER 3
 
@@ -48,7 +52,6 @@ performance of this software or code or scripts or any files in this source.
  * @brief function 1
  * @param none
  * @return none
- */
  */
 void fun1();
 /*
@@ -64,8 +67,15 @@ void fun2();
  */
 void fun3();
 
+/****** END CONFIG PART ******/
+
+// array of function pointers
 extern void (*func_ptr[CMD_NUMBER])();
+
+// array of function names
 extern char *cmd_list[CMD_NUMBER];
+
+// array of command length
 extern uint8_t cmd_len[CMD_NUMBER];
 
 #endif
