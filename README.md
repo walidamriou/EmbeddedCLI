@@ -22,6 +22,7 @@ Embedded CLI is Open and Lightweight Command Line Interface for Embedded Systems
 - Know the system components status 
 - Test the system components for debugging purposes
 - Reset/reboot the system
+- Tested with ATmega2560
   
 #### Notes
 - Works with Arduino monitor with __Both NL & CR__ and __9600__ (Tested with Arduino Mega)
