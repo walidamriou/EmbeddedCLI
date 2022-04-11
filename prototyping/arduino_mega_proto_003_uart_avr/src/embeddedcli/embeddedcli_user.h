@@ -45,7 +45,7 @@ performance of this software or code or scripts or any files in this source.
 #define DEVICE_FIRMWARE_VERSION        "v1.0.0"
 
 // Number of commands
-#define CMD_NUMBER 3
+#define CMD_NUMBER 4
 
 // functions
 /*
@@ -66,6 +66,12 @@ void fun2();
  * @return none
  */
 void fun3();
+/*
+ * @brief function 4
+ * @param none
+ * @return none
+ */
+void fun4();
 
 /****** END CONFIG PART ******/
 
