@@ -28,6 +28,10 @@ Embedded CLI | Open, Lightweight, and Flexible Command Line Interface for Embedd
 #### Notes
 - Works with Arduino monitor with __Both NL & CR__ and __9600__ (Tested with Arduino Mega)
 
+#### warning
+- The first version of this library is using some functions from standards libraries of c such as strcmp, etc. and as we know those function are unsafe to use, but we will update it later.   
+- We did not implement safe methods to check the input parameters of the function and other things to make the code more reliable, but also we will update those things later.
+
 #### Copyright CC 2022 Walid Amriou
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
