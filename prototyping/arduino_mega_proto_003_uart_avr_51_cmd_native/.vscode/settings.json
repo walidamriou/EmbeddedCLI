@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "hal_sources.h": "c"
+    }
+}

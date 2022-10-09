@@ -70,10 +70,10 @@ performance of this software or code or scripts or any files in this source.
 char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
 uint8_t embeddedcli_receive_buffer_counter = 0;
 
-inline void embeddedcli_init(void){
+void embeddedcli_init(void){
   /****** START CONFIG ******/
-  hal_serial_init();
-  hal_enable_interrupt();// Enable interrupts
+  hal_serial_UART0_init();
+  sei();// Enable interrupts
   /****** END CONFIG ******/
   hal_serial_send((uint8_t *)&EMBEDDEDCLI_WELCOME_TXT,sizeof(EMBEDDEDCLI_WELCOME_TXT));
 }
@@ -120,7 +120,7 @@ void embeddedcli_cmd_about(void) {
 // store the command functions of core in array
 void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cmd_version, embeddedcli_cmd_about};
 
-inline uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
+uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
   char cmd_search[data_len];
   uint8_t *data_addr_buf = data_addr;
   for (uint16_t i = 0; i < data_len; i++){
@@ -131,6 +131,47 @@ inline uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t da
   if(cmd_search[data_len]!='\r' && cmd_search[data_len]!='\n'){
     cmd_search[data_len-1]='\0';
   }
+
+  char *s2=cmd_search;
+  int charCompareStatus;
+  for (uint8_t i = 0; i < CORE_CMD_NUMBER; i++) {
+    char *s1=core_cmd_list[i]; 
+    charCompareStatus = 0;
+    while( ( *s1 != '\0' && *s2 != '\0' ) && *s1 == *s2 ){
+        s1++;
+        s2++;
+    }
+    //compare the mismatching character
+    charCompareStatus = (*s1 ==*s2)?0:(*s1 >*s2)?1:-1;
+    if(charCompareStatus==0){
+      (*core_func_ptr[i])();
+      memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+      memset(cmd_search, 0, data_len);
+      return 0;
+    }
+  }
+/*
+  s2=cmd_search;
+  for (uint8_t i = 0; i < CMD_NUMBER; i++) {
+    char *s1=cmd_list[i]; 
+    charCompareStatus = 0;
+    while( ( *s1 != '\0' && *s2 != '\0' ) && *s1 == *s2 ){
+        s1++;
+        s2++;
+    }
+    //compare the mismatching character
+    charCompareStatus = (*s1 ==*s2)?0:(*s1 >*s2)?1:-1;
+    if(charCompareStatus==0){
+      (*func_ptr[i])();
+      memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
+      memset(cmd_search, 0, data_len);
+      return 0;
+    }
+  }
+  
+*/
+
+  /*
   uint8_t flag = 0;
   for (uint8_t i = 0; i < CORE_CMD_NUMBER; i++) {
     if (!strcmp(core_cmd_list[i], cmd_search)) {
@@ -150,14 +191,15 @@ inline uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t da
         return 0;
     }
   }
-  }
+  
+  }*/
   hal_serial_send((uint8_t *)&EMBEDDEDCLI_ERROR_NOTFOUND_TXT,sizeof(EMBEDDEDCLI_ERROR_NOTFOUND_TXT)); 
   memset(embeddedcli_receive_buffer, 0, EMBEDDEDCLI_IN_BUF_SIZE);
   memset(cmd_search, 0, data_len);
   return 0;
 }
 
-inline uint8_t embeddedcli_receive(char data_received){ 
+uint8_t embeddedcli_receive(char data_received){ 
   // check if buffer is full
   if((embeddedcli_receive_buffer_counter+1) > EMBEDDEDCLI_IN_BUF_SIZE){
     // clear buffer
@@ -166,7 +208,6 @@ inline uint8_t embeddedcli_receive(char data_received){
     embeddedcli_receive_buffer_counter=0;
     // return buffer is full error
     hal_serial_send((uint8_t *)&EMBEDDEDCLI_ERROR_LONGSIZE_TXT,sizeof(EMBEDDEDCLI_ERROR_LONGSIZE_TXT));
-    memset(embeddedcli_receive_buffer, 0, embeddedcli_receive_buffer_counter);
     // go out from the interrupt handler
     return 0; 
   }

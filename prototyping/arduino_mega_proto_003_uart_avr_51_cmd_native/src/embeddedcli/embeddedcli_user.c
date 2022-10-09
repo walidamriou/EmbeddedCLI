@@ -246,30 +246,11 @@ void fun50(){
 void (*func_ptr[CMD_NUMBER])() = {fun1, fun2, fun3,fun4,fun4_1,fun5,fun6,fun7,fun8,fun9,fun10,fun11,fun12,fun13,fun14,fun15,fun16,fun17,fun18,fun19,fun20,fun21,fun22,fun23,fun24,fun25,fun26,fun27,fun28,fun29,fun30,fun31,fun32,fun33,fun34,fun35,fun36,fun37,fun38,fun39,fun40,fun41,fun42,fun43,fun44,fun45,fun46,fun47,fun48,fun49,fun50};
 
 // save function names in a array (Do not change name of this array)
-char *cmd_COMPENETS[CMD_NUMBER] = {"Motor","Fan"};
-char *cmd_Motor[CMD_NUMBER] = {"--Speed","--stop"};
-
-char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3","cmd4","motor --speed 200","cmd5","cmd6","cmd7","cmd8","cmd9","cmd10","cmd11","cmd12","cmd13","cmd14","cmd15","cmd16","cmd17","cmd18","cmd19","cmd20","cmd21","cmd22","cmd23","cmd24","cmd25","cmd26","cmd27","cmd28","cmd29","cmd30","cmd31","cmd32","cmd33","cmd34","cmd35","cmd36","cmd37","cmd38","cmd39","cmd40","cmd41","cmd42","cmd43","cmd44","cmd45","cmd46","cmd47","cmd48","cmd49","cmd50"};
+char *cmd_list[CMD_NUMBER] = {"cmd1", "cmd2", "cmd3","cmd4","cmd4 sub1","cmd5","cmd6","cmd7","cmd8","cmd9","cmd10","cmd11","cmd12","cmd13","cmd14","cmd15","cmd16","cmd17","cmd18","cmd19","cmd20","cmd21","cmd22","cmd23","cmd24","cmd25","cmd26","cmd27","cmd28","cmd29","cmd30","cmd31","cmd32","cmd33","cmd34","cmd35","cmd36","cmd37","cmd38","cmd39","cmd40","cmd41","cmd42","cmd43","cmd44","cmd45","cmd46","cmd47","cmd48","cmd49","cmd50"};
 
 // save the command lengths in a array (Do not change name of this array)
 extern uint8_t cmd_len[CMD_NUMBER]={5,5,5,5,10,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5};
 
-motor --speed 100
-motor --speed 200
-motor --speed 300
-motor --speed 400
-motor --speed 500
-motor --speed 600
-motor --speed 700
-motor --speed 800
-motor --speed 900
-motor --speed 1000
-motor --speed 1100
-ms1
-18*10 = 180
-5+7+40= 55
-
-Embedded systems <-- protocol --> Embedded CLI interpreter (NODEJS, C) <-- docopt --> Humain 
 /****** END CONFIG PART ******/
 
 

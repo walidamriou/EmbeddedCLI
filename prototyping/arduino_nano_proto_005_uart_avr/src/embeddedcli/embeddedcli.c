@@ -70,7 +70,7 @@ performance of this software or code or scripts or any files in this source.
 char embeddedcli_receive_buffer[EMBEDDEDCLI_IN_BUF_SIZE];
 uint8_t embeddedcli_receive_buffer_counter = 0;
 
-inline void embeddedcli_init(void){
+void embeddedcli_init(void){
   /****** START CONFIG ******/
   hal_serial_init();
   hal_enable_interrupt();// Enable interrupts
@@ -120,7 +120,7 @@ void embeddedcli_cmd_about(void) {
 // store the command functions of core in array
 void (*core_func_ptr[CORE_CMD_NUMBER])() = {embeddedcli_cmd_help, embeddedcli_cmd_version, embeddedcli_cmd_about};
 
-inline uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
+uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t data_len){  
   char cmd_search[data_len];
   uint8_t *data_addr_buf = data_addr;
   for (uint16_t i = 0; i < data_len; i++){
@@ -157,7 +157,7 @@ inline uint8_t embeddedcli_cmd_core_search(uint8_t *const data_addr, uint16_t da
   return 0;
 }
 
-inline uint8_t embeddedcli_receive(char data_received){ 
+uint8_t embeddedcli_receive(char data_received){ 
   // check if buffer is full
   if((embeddedcli_receive_buffer_counter+1) > EMBEDDEDCLI_IN_BUF_SIZE){
     // clear buffer
